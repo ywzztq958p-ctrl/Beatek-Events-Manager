@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Logo } from './Logo';
-import { Lock, Mail, ArrowRight, AlertCircle, User, Phone, ArrowLeft } from 'lucide-react';
+import { Lock, Mail, ArrowRight, AlertCircle, User, ArrowLeft } from 'lucide-react';
 
 interface LoginScreenProps {
   onLogin: () => void;
@@ -21,7 +21,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [signupData, setSignupData] = useState({
     name: '',
     email: '',
-    phone: '',
     password: ''
   });
 
@@ -170,22 +169,6 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                   value={signupData.email}
                   onChange={handleSignupChange}
                   placeholder="jean@beatek.com"
-                  className="w-full bg-zinc-950 border border-zinc-800 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-colors placeholder:text-zinc-700"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-zinc-400 uppercase tracking-wider ml-1">Téléphone mobile</label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={18} />
-                <input 
-                  name="phone"
-                  type="tel" 
-                  required
-                  value={signupData.phone}
-                  onChange={handleSignupChange}
-                  placeholder="514 123 4567"
                   className="w-full bg-zinc-950 border border-zinc-800 text-white pl-10 pr-4 py-3 rounded-lg focus:outline-none focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 transition-colors placeholder:text-zinc-700"
                 />
               </div>
