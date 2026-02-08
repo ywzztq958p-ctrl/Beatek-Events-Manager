@@ -1,0 +1,5 @@
+{
+  "name": "Beatek Events Manager",
+  "description": "Application de gestion interne pour Beatek Events : Calendrier, Contrats et Signatures.",
+  "requestFramePermissions": []
+}
