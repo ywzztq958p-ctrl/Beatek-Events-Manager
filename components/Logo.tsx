@@ -8,9 +8,10 @@ export const Logo: React.FC<{ size?: 'sm' | 'md' | 'lg' }> = ({ size = 'md' }) =
   };
 
   return (
-    <div className={`font-bold tracking-widest leading-none select-none ${sizeClasses[size]} text-white`}>
+    // FIX: Removed invalid quoted class name "text-fuchsia".
+    <div className={`font-bold tracking-widest leading-none select-none ${sizeClasses[size]}`}>
       <div className="flex flex-col">
-        <span className="text-fuchsia-500">BEA<span className="text-white">—</span></span>
+        <span className="text-fuchsia-500">BEA—</span>
         <div className="flex items-center gap-1 ml-auto">
           <span className="bg-fuchsia-500 h-[2px] w-6 block md:w-12"></span>
           <span className="text-fuchsia-500">TEK</span>
