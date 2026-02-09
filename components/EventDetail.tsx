@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { EventData, EventStatus, Reminder } from '../types';
 import { Calendar, MapPin, User, Clock, Music, FileText, Send, CheckCircle, AlertCircle, Wand2, X, Trash2, Bell, Plus } from 'lucide-react';
 import { SignaturePad } from './SignaturePad';
-import { generateContractClause } from '../services/aiService';
+import { generateContractClause, generateContractEmail, EmailDraft } from '../services/aiService';
 import { ConfirmationModal } from './ConfirmationModal';
+import { AiEmailModal } from './AiEmailModal';
 
 interface EventDetailProps {
   event: EventData;
@@ -19,6 +20,9 @@ export const EventDetail: React.FC<EventDetailProps> = ({ event, onBack, onUpdat
   const [aiPrompt, setAiPrompt] = useState('');
   const [notification, setNotification] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [emailDraft, setEmailDraft] = useState<EmailDraft | null>(null);
+  const [isSending, setIsSending] = useState(false);
 
   const formatDate = (isoString: string) => {
     return new Date(isoString).toLocaleDateString('fr-CA', {
@@ -44,13 +48,22 @@ export const EventDetail: React.FC<EventDetailProps> = ({ event, onBack, onUpdat
     showNotification("Contrat signé avec succès !");
   };
 
-  const handleSendContract = () => {
+  const handleSendContract = async () => {
+    if (!event.contract) return;
+    setIsSending(true);
+    const draft = await generateContractEmail(event);
+    setEmailDraft(draft);
+    setIsEmailModalOpen(true);
+    setIsSending(false);
+  };
+  
+  const confirmContractSent = () => {
     const updatedEvent = {
       ...event,
       status: EventStatus.CONTRACT_SENT
     };
     onUpdate(updatedEvent);
-    showNotification(`Contrat envoyé à ${event.client.email}`);
+    showNotification(`Contrat marqué comme envoyé à ${event.client.email}`);
   };
 
   const showNotification = (msg: string) => {
@@ -385,9 +398,19 @@ export const EventDetail: React.FC<EventDetailProps> = ({ event, onBack, onUpdat
                                             </button>
                                             <button 
                                                 onClick={handleSendContract}
-                                                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-medium flex justify-center items-center gap-2 transition-colors"
+                                                disabled={isSending}
+                                                className="flex-1 bg-zinc-800 hover:bg-zinc-700 text-white py-3 rounded-lg font-medium flex justify-center items-center gap-2 transition-colors disabled:opacity-50"
                                             >
-                                                <Send size={18} /> Envoyer au client
+                                                {isSending ? (
+                                                  <>
+                                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                                    <span>Génération...</span>
+                                                  </>
+                                                ) : (
+                                                  <>
+                                                    <Send size={18} /> Envoyer au client
+                                                  </>
+                                                )}
                                             </button>
                                         </div>
                                     )}
@@ -409,6 +432,17 @@ export const EventDetail: React.FC<EventDetailProps> = ({ event, onBack, onUpdat
         title="Supprimer l'événement ?"
         message="Voulez-vous vraiment supprimer cet événement ? Toutes les données associées seront perdues."
       />
+
+      {emailDraft && (
+        <AiEmailModal 
+          isOpen={isEmailModalOpen}
+          onClose={() => setIsEmailModalOpen(false)}
+          onSend={confirmContractSent}
+          recipient={event.client.email}
+          subject={emailDraft.subject}
+          body={emailDraft.body}
+        />
+      )}
     </div>
   );
 };

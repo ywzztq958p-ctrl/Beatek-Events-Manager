@@ -97,7 +97,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ events }) => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Left Column - Charts (Takes 2 cols) */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="lg:col-span-2 space-y-6 min-w-0">
             <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl">
             <h3 className="text-lg font-semibold text-white mb-4">Statut des événements</h3>
             <div className="h-64">
@@ -154,7 +154,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ events }) => {
         </div>
 
         {/* Right Column - Reminders */}
-        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl overflow-hidden flex flex-col">
+        <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-xl overflow-hidden flex flex-col min-h-0">
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                     <Bell className="text-fuchsia-500" size={20} /> Rappels
